@@ -46,7 +46,7 @@
       <option name="presentableId" value="Default" />
       <updated>1662717082821</updated>
       <workItem from="1662717084126" duration="454000" />
-      <workItem from="1662717593792" duration="3286000" />
+      <workItem from="1662717593792" duration="7508000" />
     </task>
     <servers />
   </component>
@@ -63,5 +63,16 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/pl/coderslab/TaskManager.java</url>
+          <line>40</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
