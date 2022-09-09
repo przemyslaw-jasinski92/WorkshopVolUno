@@ -2,13 +2,14 @@ package pl.coderslab;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class TaskManager {
@@ -23,12 +24,16 @@ public class TaskManager {
         }
     }
 
-    public static void Menu() {
+    public static void Menu() throws IOException {
+        String[][] tasks = loadFileTasks();
+        Scanner scanner = new Scanner(System.in);
         String option = "";
-        System.out.println(ConsoleColors.BLUE + "Please select an option:");
-        String[] options = {"add", "remove", "list", "exit"};
-        for (String line : options) {
-            System.out.println(ConsoleColors.RESET + line);
+        while (!option.equals("exit")) {
+            System.out.println(ConsoleColors.BLUE + "Please select an option:");
+            String[] options = {"add", "remove", "list", "exit"};
+            for (String line : options) {
+                System.out.println(ConsoleColors.RESET + line);
+            }
         }
 
     }
@@ -79,7 +84,23 @@ public class TaskManager {
         return newListTasks;
     }
 
-    public static String[][] removeTask(String[][] tasks, int indexRemove) {
+    public static String[][] removeTask(String[][] tasks) {
+        Scanner scanner = new Scanner(System.in);
+        int indexRemove = -1;
+        System.out.println("Select number to remove:");
+        indexRemove = scanner.nextInt();
+        while(indexRemove <= 0){
+
+            if(!scanner.hasNextInt()){
+                scanner.nextLine();
+                System.out.println("Incorrect argument passed. Please give number greater or equal 0");
+            }
+            indexRemove = scanner.nextInt();
+            if(indexRemove < 0 || indexRemove >= tasks.length){
+                scanner.next();
+                System.out.println("Incorrect argument passed. Please give number greater or equal 0");
+            }
+        }
         String[] allTasks;
         String task = "";
         for (int i = 0; i < tasks.length; i++) {
@@ -93,20 +114,44 @@ public class TaskManager {
             task += "&&";
         }
         allTasks = task.split("&&");
-        if(indexRemove <= tasks.length-1 && indexRemove > -1){
-            String[][] newListTasks = new String[allTasks.length-1][3];
-            allTasks = ArrayUtils.remove(allTasks, indexRemove);
-            for (int i = 0; i < newListTasks.length; i++) {
-                String[] splitTask = allTasks[i].split(",");
-                for (int j = 0; j < newListTasks[i].length; j++) {
-                    newListTasks[i][j] = splitTask[j];
-                }
+        String[][] newListTasks = new String[allTasks.length - 1][3];
+        allTasks = ArrayUtils.remove(allTasks, indexRemove);
+        for (int i = 0; i < newListTasks.length; i++) {
+            String[] splitTask = allTasks[i].split(",");
+            for (int j = 0; j < newListTasks[i].length; j++) {
+                newListTasks[i][j] = splitTask[j];
             }
-            return newListTasks;
+        }
+        System.out.println("Value was successfully deleted");
+        return newListTasks;
+    }
 
-        }else{
-            System.out.println("You put wrong index of tasks.");
-            return tasks;
+    public static void saveToFile(String[][] tasks) throws IOException {
+        Path tasksPath = Paths.get("tasks.csv");
+        boolean tasksPathExists = Files.exists(tasksPath);
+        if (tasksPathExists) {
+            List<String> allTasks = new ArrayList<>();
+            String[] splitTasks = new String[tasks.length];
+            String task = "";
+            for (int i = 0; i < tasks.length; i++) {
+                for (int j = 0; j < tasks[i].length; j++) {
+                    if (j == tasks[i].length - 1) {
+                        task += tasks[i][j];
+                    } else {
+                        task += tasks[i][j] + ",";
+                    }
+                }
+                splitTasks[i] = task;
+                allTasks.add(splitTasks[i]);
+                task = "";
+            }
+            try {
+                Files.write(tasksPath, allTasks);
+            } catch (IOException e) {
+                System.err.println("Cannot save to file");
+            }
+        } else {
+            throw new FileNotFoundException();
         }
     }
 
@@ -114,9 +159,31 @@ public class TaskManager {
     public static void main(String[] args) throws IOException {
 
         String[][] tasks = loadFileTasks();
-        showList(tasks);
-        tasks = removeTask(tasks, 0);
-        showList(tasks);
-
+        Scanner scanner = new Scanner(System.in);
+        String inputOption = "";
+        while (!inputOption.equals("exit")) {
+            System.out.println(ConsoleColors.BLUE + "Please select an option:");
+            String[] options = {"add", "remove", "list", "exit"};
+            for (String line : options) {
+                System.out.println(ConsoleColors.RESET + line);
+            }
+            inputOption = scanner.nextLine();
+            switch(inputOption){
+                case "add":
+                    tasks = addTask(tasks);
+                    break;
+                case "remove":
+                    tasks = removeTask(tasks);
+                    break;
+                case "list":
+                    showList(tasks);
+                    break;
+                case "exit":
+                    saveToFile(tasks);
+                    break;
+                default:
+                    System.out.println("Please select a correct option");
+            }
+        }
     }
 }
