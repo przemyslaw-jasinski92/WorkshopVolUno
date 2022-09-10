@@ -17,13 +17,18 @@ public class TaskManager {
 
 
     public static void showList(String[][] tasks) {
-        for (int i = 0; i < tasks.length; i++) {
-            System.out.print(i + " : ");
-            for (int j = 0; j < tasks[i].length; j++) {
-                System.out.print(tasks[i][j] + " ");
+        if (tasks.length == 0) {
+            System.out.println("List of tasks is empty.");
+        } else {
+            for (int i = 0; i < tasks.length; i++) {
+                System.out.print(i + " : ");
+                for (int j = 0; j < tasks[i].length; j++) {
+                    System.out.print(tasks[i][j] + " ");
+                }
+                System.out.println();
             }
-            System.out.println();
         }
+
     }
 
     public static void showMenu() throws IOException {
@@ -107,10 +112,6 @@ public class TaskManager {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please add task description:");
         newListTasks[tasks.length][0] = scanner.nextLine();
-        while (newListTasks[tasks.length][0].contains("&&")) {
-            System.out.println("You put forbidden signs like '&&'. Please add task description without '&&'");
-            newListTasks[tasks.length][0] = scanner.nextLine();
-        }
         System.out.println("Please add task due date");
         newListTasks[tasks.length][1] = scanner.nextLine();
         System.out.println("Is your task is important: true/false");
@@ -127,6 +128,10 @@ public class TaskManager {
         Scanner scanner = new Scanner(System.in);
         String checkIndexRemove = "";
         int indexRemove = -1;
+        if (tasks.length == 0) {
+            System.out.println("List of tasks is empty.");
+            return tasks;
+        }
         System.out.println("Select number to remove:");
         do {
             checkIndexRemove = scanner.next();
@@ -140,8 +145,9 @@ public class TaskManager {
                     scanner.nextLine();
                 }
             }
-
         } while (checkIndexRemove.equals("") || !NumberUtils.isParsable(checkIndexRemove) || indexRemove < 0 || indexRemove > tasks.length - 1);
+
+
         tasks = ArrayUtils.remove(tasks, indexRemove);
         System.out.println("Value was successfully deleted");
         return tasks;
@@ -176,6 +182,5 @@ public class TaskManager {
 
     public static void main(String[] args) throws IOException {
         showMenu();
-
     }
 }
