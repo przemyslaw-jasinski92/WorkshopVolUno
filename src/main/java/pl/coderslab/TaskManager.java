@@ -60,7 +60,7 @@ public class TaskManager {
     public static String[][] loadFileTasks() throws IOException {
 
         String readLine = "";
-        String[] task = new String[0];
+        String[][] tasks = new String[0][3];
         Path tasksPath = Paths.get("tasks.csv");
         boolean tasksPathExists = Files.exists(tasksPath);
         if (!tasksPathExists) {
@@ -69,59 +69,37 @@ public class TaskManager {
         for (String line : Files.readAllLines(tasksPath)) {
             readLine = line;
             if (!line.equals("")) {
-                task = Arrays.copyOf(task, task.length + 1);
-                task[task.length - 1] = readLine;
-            }
-        }
-
-        String[][] tasks = new String[task.length][3];
-        for (int i = 0; i < tasks.length; i++) {
-            String[] splitTasks = task[i].split(",");
-            for (int j = 0; j < 3; j++) {
-                tasks[i][j] = splitTasks[j];
+                tasks = Arrays.copyOf(tasks, tasks.length + 1);
+                tasks[tasks.length - 1] = splitLineFile(readLine);
             }
         }
         return tasks;
     }
 
+    public static String[] splitLineFile(String readLine) {
+        return readLine.split(",");
+    }
+
     public static String[][] addTask(String[][] tasks) {
-        String[][] newListTasks = new String[tasks.length + 1][3];
-        for (int i = 0; i < tasks.length; i++) {
-            for (int j = 0; j < tasks[i].length; j++) {
-                newListTasks[i][j] = tasks[i][j];
-            }
-        }
 
-        /*tasks = Arrays.copyOf(tasks, tasks.length + 1);
-        System.out.println(Arrays.toString(tasks));
+        String[] newTask = new String[3];
+        System.out.println(tasks.length);
+        tasks = Arrays.copyOf(tasks, tasks.length + 1);
+        System.out.println(tasks.length);
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please add task description:");
-        tasks[tasks.length-1][0] = scanner.nextLine();
-        while (tasks[tasks.length-1][0].contains("&&")) {
-            System.out.println("You put forbidden signs like '&&'. Please add task description without '&&'");
-            tasks[tasks.length-1][0] = scanner.nextLine();
-        }
+        newTask[0] = scanner.nextLine();
         System.out.println("Please add task due date");
-        tasks[tasks.length-1][1] = scanner.nextLine();
+        newTask[1] = scanner.nextLine();
         System.out.println("Is your task is important: true/false");
-        tasks[tasks.length-1][2] = scanner.next();
-        while (!(tasks[tasks.length-1][2].equals("true") || tasks[tasks.length-1][2].equals("false"))) {
+        newTask[2] = scanner.next();
+        while (!(newTask[2].equals("true") || newTask[2].equals("false"))) {
             System.out.println("You chose wrong importance. Enter: true/false:");
-            tasks[tasks.length-1][2] = scanner.next();
-        }*/
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please add task description:");
-        newListTasks[tasks.length][0] = scanner.nextLine();
-        System.out.println("Please add task due date");
-        newListTasks[tasks.length][1] = scanner.nextLine();
-        System.out.println("Is your task is important: true/false");
-        newListTasks[tasks.length][2] = scanner.next();
-        while (!(newListTasks[tasks.length][2].equals("true") || newListTasks[tasks.length][2].equals("false"))) {
-            System.out.println("You chose wrong importance. Enter: true/false:");
-            newListTasks[tasks.length][2] = scanner.next();
+            newTask[2] = scanner.nextLine();
         }
+        tasks[tasks.length - 1] = newTask;
 
-        return newListTasks;
+        return tasks;
     }
 
     public static String[][] removeTask(String[][] tasks) {
@@ -146,8 +124,6 @@ public class TaskManager {
                 }
             }
         } while (checkIndexRemove.equals("") || !NumberUtils.isParsable(checkIndexRemove) || indexRemove < 0 || indexRemove > tasks.length - 1);
-
-
         tasks = ArrayUtils.remove(tasks, indexRemove);
         System.out.println("Value was successfully deleted");
         return tasks;
@@ -178,7 +154,6 @@ public class TaskManager {
             System.err.println("Cannot save to file");
         }
     }
-
 
     public static void main(String[] args) throws IOException {
         showMenu();

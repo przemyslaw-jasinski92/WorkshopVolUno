@@ -7,7 +7,6 @@
     <list default="true" id="19a0d7e5-3565-4970-900e-e3488d0acdff" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/coderslab/TaskManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/coderslab/TaskManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tasks.csv" beforeDir="false" afterPath="$PROJECT_DIR$/tasks.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +47,9 @@
       <updated>1662717082821</updated>
       <workItem from="1662717084126" duration="454000" />
       <workItem from="1662717593792" duration="25155000" />
-      <workItem from="1662806870075" duration="4878000" />
+      <workItem from="1662806870075" duration="5891000" />
+      <workItem from="1662823347572" duration="2554000" />
+      <workItem from="1662838758148" duration="1793000" />
     </task>
     <servers />
   </component>
