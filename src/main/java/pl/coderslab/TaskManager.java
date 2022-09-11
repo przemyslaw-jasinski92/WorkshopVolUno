@@ -34,10 +34,10 @@ public class TaskManager {
     public static void showMenu() throws IOException {
         String[][] tasks = loadFileTasks();
         Scanner scanner = new Scanner(System.in);
+        String[] options = {"add", "remove", "list", "exit"};
         String inputOption = "";
         while (!inputOption.equals("exit")) {
             System.out.println(ConsoleColors.BLUE + "Please select an option:");
-            String[] options = {"add", "remove", "list", "exit"};
             for (String line : options) {
                 System.out.println(ConsoleColors.RESET + line);
             }
@@ -59,19 +59,17 @@ public class TaskManager {
 
     public static String[][] loadFileTasks() throws IOException {
 
-        String readLine = "";
-        String[][] tasks = new String[0][3];
         Path tasksPath = Paths.get("tasks.csv");
         boolean tasksPathExists = Files.exists(tasksPath);
         if (!tasksPathExists) {
             throw new FileNotFoundException();
         }
+        List<String> lines = Files.readAllLines(tasksPath);
+        String[][] tasks = new String[lines.size()][3];
+        int counterOfLines = 0;
         for (String line : Files.readAllLines(tasksPath)) {
-            readLine = line;
-            if (!line.equals("")) {
-                tasks = Arrays.copyOf(tasks, tasks.length + 1);
-                tasks[tasks.length - 1] = splitLineFile(readLine);
-            }
+            tasks[counterOfLines] = splitLineFile(line);
+            counterOfLines++;
         }
         return tasks;
     }
@@ -83,22 +81,20 @@ public class TaskManager {
     public static String[][] addTask(String[][] tasks) {
 
         String[] newTask = new String[3];
-        System.out.println(tasks.length);
         tasks = Arrays.copyOf(tasks, tasks.length + 1);
-        System.out.println(tasks.length);
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please add task description:");
+        System.out.println(ConsoleColors.BLUE_BOLD + "Please add task description:");
         newTask[0] = scanner.nextLine();
         System.out.println("Please add task due date");
         newTask[1] = scanner.nextLine();
         System.out.println("Is your task is important: true/false");
-        newTask[2] = scanner.next();
+        newTask[2] = scanner.nextLine();
         while (!(newTask[2].equals("true") || newTask[2].equals("false"))) {
-            System.out.println("You chose wrong importance. Enter: true/false:");
+            System.err.println("You chose wrong importance. Enter: true/false:");
             newTask[2] = scanner.nextLine();
         }
         tasks[tasks.length - 1] = newTask;
-
+        System.out.println(ConsoleColors.GREEN_BOLD_BRIGHT + "Task has been successfully added to your list.");
         return tasks;
     }
 
@@ -123,9 +119,9 @@ public class TaskManager {
                     scanner.nextLine();
                 }
             }
-        } while (checkIndexRemove.equals("") || !NumberUtils.isParsable(checkIndexRemove) || indexRemove < 0 || indexRemove > tasks.length - 1);
+        } while (!NumberUtils.isParsable(checkIndexRemove) || indexRemove < 0 || indexRemove > tasks.length - 1);
         tasks = ArrayUtils.remove(tasks, indexRemove);
-        System.out.println("Value was successfully deleted");
+        System.out.println(ConsoleColors.PURPLE_UNDERLINED + "Value was successfully deleted");
         return tasks;
     }
 
@@ -136,8 +132,9 @@ public class TaskManager {
             throw new FileNotFoundException();
         }
         List<String> allTasks = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
+
         for (int i = 0; i < tasks.length; i++) {
+            StringBuilder sb = new StringBuilder();
             for (int j = 0; j < tasks[i].length; j++) {
                 if (j == tasks[i].length - 1) {
                     sb.append(tasks[i][j]);
@@ -146,7 +143,6 @@ public class TaskManager {
                 }
             }
             allTasks.add(sb.toString());
-            sb.delete(0, sb.length());
         }
         try {
             Files.write(tasksPath, allTasks);
