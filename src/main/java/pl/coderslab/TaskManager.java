@@ -36,13 +36,12 @@ public class TaskManager {
         Scanner scanner = new Scanner(System.in);
         String[] options = {"add", "remove", "list", "exit"};
         String inputOption = "";
-        while (!inputOption.equals("exit")) {
+        while (!inputOption.equalsIgnoreCase("exit")) {
             System.out.println(ConsoleColors.BLUE + "Please select an option:");
             for (String line : options) {
                 System.out.println(ConsoleColors.RESET + line);
             }
             inputOption = scanner.nextLine();
-            inputOption = inputOption.toLowerCase();
             switch (inputOption) {
                 case "add" -> tasks = addTask(tasks);
                 case "remove" -> tasks = removeTask(tasks);
