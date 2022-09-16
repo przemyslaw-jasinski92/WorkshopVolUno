@@ -36,3 +36,18 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+target/*
+.settings/*
+.attach_pid*
+.idea
+/target
+_site/
+
+*.class
+*.jar
+*.war
+*.ear
+*.logs
+.idea/
+.eclipse
